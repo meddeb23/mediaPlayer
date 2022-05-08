@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1100.0" style="-fx-background-color: #231f33;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.HomeControllers">
+   <children>
+      <Pane layoutY="550.0" prefHeight="100.0" prefWidth="1100.0" style="-fx-background-color: linear-gradient(to top left, #312f3c,#40375c);;">
+         <children>
+            <HBox alignment="CENTER" layoutX="450.0" layoutY="10.0" prefHeight="50.0" prefWidth="200.0" spacing="40.0">
+               <children>
+                  <Button fx:id="prvBtn" layoutX="174.0" layoutY="13.0" mnemonicParsing="false" onAction="#previous" style="-fx-background-color: #00000000;">
+                     <graphic>
+                        <ImageView>
+                           <image>
+                              <Image url="@../../assets/icons8_rewind_30px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="playBtn" mnemonicParsing="false" onAction="#togglePlay" style="-fx-background-color: #00000000;">
+                     <graphic>
+                        <StackPane prefHeight="71.0" prefWidth="50.0">
+                           <children>
+                              <Circle fill="WHITE" radius="25.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
+                              <ImageView fx:id="actionIcon">
+                                 <image>
+                                    <Image url="@../../assets/icons8_pause_30px_1.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="nextBtn" mnemonicParsing="false" onAction="#next" style="-fx-background-color: #00000000;">
+                     <graphic>
+                        <ImageView fitWidth="30.0">
+                           <image>
+                              <Image url="@../../assets/icons8_fast_forward_30px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <ImageView fitHeight="100.0" fitWidth="100.0">
+               <image>
+                  <Image url="@../../assets/album_art.jpg" />
+               </image>
+            </ImageView>
+            <VBox alignment="CENTER_LEFT" layoutX="100.0" prefHeight="100.0" prefWidth="200.0">
+               <padding>
+                  <Insets left="20.0" />
+               </padding>
+               <children>
+                  <Label text="Location" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Medium" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label text="Khalid" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins ExtraBold" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <ProgressBar fx:id="songProgressBar" layoutX="250.0" layoutY="77.0" prefHeight="10.0" prefWidth="600.0" progress="0.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ProgressBar>
+            <HBox alignment="CENTER" layoutX="893.0" prefHeight="50.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="volumeBtn">
+                     <image>
+                        <Image url="@../../assets/icons8_voice_30px.png" />
+                     </image>
+                  </ImageView>
+                  <Slider fx:id="volumeSlider" max="200.0" value="10.0" />
+               </children>
+            </HBox>
+         </children>
+      </Pane>
+      <Pane prefHeight="550.0" prefWidth="350.0" style="-fx-border-width: 2px; -fx-border-style: hidden solid hidden hidden; -fx-border-color: #3f3d54;">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <children>
+            <Circle fill="DODGERBLUE" layoutX="36.0" layoutY="42.0" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label layoutX="58.0" layoutY="34.0" prefHeight="20.0" prefWidth="85.0" text="Thomas" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Medium" size="14.0" />
+               </font></Label>
+            <Line endX="300.0" layoutX="25.0" layoutY="70.0" stroke="#3f3d54" strokeWidth="2.0" />
+            <VBox layoutX="25.0" layoutY="90.0" prefHeight="200.0" prefWidth="300.0" spacing="10.0">
+               <children>
+                  <Label text="MENU" textFill="#8784a4">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="300.0" style="-fx-background-color: #ffffff00;" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Medium" size="14.0" />
+                     </font>
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="20.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0">
+                                 <image>
+                                    <Image url="@../../assets/icons8_home_page_30px_1.png" />
+                                 </image>
+                              </ImageView>
+                              <Label prefHeight="20.0" prefWidth="80.0" text="Home" textFill="WHITE">
+                                 <font>
+                                    <Font name="Poppins Medium" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="300.0" style="-fx-background-color: #ffffff00;" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Poppins Medium" size="14.0" />
+                     </font>
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="20.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0">
+                                 <image>
+                                    <Image url="@../../assets/icons8_playlist_30px.png" />
+                                 </image>
+                              </ImageView>
+                              <Label prefHeight="20.0" prefWidth="80.0" text="Playlist" textFill="WHITE">
+                                 <font>
+                                    <Font name="Poppins Medium" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </graphic>
+                  </Button>
+               </children>
+            </VBox>
+            <Button layoutX="25.0" layoutY="500.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="300.0" style="-fx-background-color: #ffffff00;" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Poppins Medium" size="14.0" />
+               </font>
+               <graphic>
+                  <HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="20.0">
+                     <children>
+                        <ImageView fitHeight="25.0" fitWidth="25.0">
+                           <image>
+                              <Image url="@../../assets/icons8_logout_rounded_left_30px_2.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="20.0" prefWidth="80.0" text="Logout" textFill="WHITE">
+                           <font>
+                              <Font name="Poppins Medium" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </graphic>
+            </Button>
+         </children>
+      </Pane>
+      <Label layoutX="400.0" layoutY="29.0" text="My Music" textFill="WHITE">
+         <font>
+            <Font name="Poppins ExtraBold" size="30.0" />
+         </font>
+      </Label>
+      <ScrollPane layoutX="350.0" layoutY="99.0" prefHeight="446.0" prefWidth="751.0" style="-fx-background-color: #231f33;">
+         <content>
+            <VBox fx:id="mediaList" layoutX="113.0" layoutY="100.0" prefHeight="444.0" prefWidth="736.0" spacing="10.0" style="-fx-background-color: #231f33;">
+               <padding>
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
