@@ -311,6 +311,7 @@ public class HomeControllers implements Initializable {
         media = new Media(songs.get(songNumber).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setVolume(volumeSlider.getValue() * 0.01);
+        songTitle.setText(songs.get(songNumber).getName());
         if (autoPlay)
             togglePlay();
     }

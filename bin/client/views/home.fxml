@@ -63,12 +63,12 @@
                   <Image url="@../../assets/album_art.jpg" />
                </image>
             </ImageView>
-            <VBox alignment="CENTER_LEFT" layoutX="100.0" prefHeight="100.0" prefWidth="200.0">
+            <VBox alignment="CENTER_LEFT" layoutX="100.0" prefHeight="100.0" prefWidth="358.0">
                <padding>
                   <Insets left="20.0" />
                </padding>
                <children>
-                  <Label fx:id="songTitle" text="Location" textFill="WHITE">
+                  <Label fx:id="songTitle" prefHeight="27.0" prefWidth="317.0" text="Location" textFill="WHITE">
                      <font>
                         <Font name="Poppins Medium" size="18.0" />
                      </font>
