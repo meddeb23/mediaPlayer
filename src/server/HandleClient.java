@@ -5,6 +5,7 @@ import java.net.*;
 
 import MAMP.MAMP;
 import server.routes.HandleMessages;
+import server.routes.HandlerPlaylist;
 
 public class HandleClient extends Thread {
     private Socket socket = null;
@@ -26,6 +27,15 @@ public class HandleClient extends Thread {
             switch (req.getResource()) {
                 case "/message":
                     HandleMessages.run(req, outputStream);
+                    break;
+                case "/addPlaylist":
+                    HandlerPlaylist.AddPlaylist(req, outputStream);
+                    break;
+                case "/getPlaylists":
+                    HandlerPlaylist.GetPlaylists(req, outputStream);
+                    break;
+                case "/GetPlaylist":
+                    HandlerPlaylist.GetPlaylist(req, outputStream);
                     break;
                 default:
                     break;

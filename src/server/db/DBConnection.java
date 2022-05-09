@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    private static String dbName = "GFormations";
+    private static String dbName = "music";
     private static String url = "jdbc:mysql://192.168.75.129:3306/" + dbName;
     private static String user = "root";
     private static String passwd = "password";

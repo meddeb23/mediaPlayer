@@ -3,6 +3,9 @@ package client.controllers;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,13 +17,20 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+
+import MAMP.MAMP;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -28,15 +38,25 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import server.models.Playlist;
 import utilities.Utilities;
 
 public class HomeControllers implements Initializable {
     @FXML
     private ImageView actionIcon;
+
+    @FXML
+    private Button addPlaylistBtn;
+
+    @FXML
+    private Label songTitle;
 
     @FXML
     private VBox mediaList;
@@ -58,6 +78,12 @@ public class HomeControllers implements Initializable {
 
     @FXML
     private ProgressBar songProgressBar;
+
+    @FXML
+    private VBox playlistList;
+
+    @FXML
+    private Button home;
 
     private Media media;
     private MediaPlayer mediaPlayer;
@@ -94,30 +120,8 @@ public class HomeControllers implements Initializable {
         }
         System.out.println(songs.get(songNumber).getAbsolutePath());
 
-        // try {
-        // FileInputStream file = new FileInputStream(songs.get(songNumber));
-        // int size = (int) songs.get(songNumber).length();
-        // // file.skip(size - 128);
-        // byte[] last128 = new byte[size];
-        // file.read(last128);
-        // System.out.println(last128.toString());
-        // String id3 = new String(last128);
-        // String tag = id3.substring(0, 3);
-        // System.out.println(tag);
-        // if (tag.equals("ID3")) {
-        // System.out.println("Title: " + id3.substring(18, 48).replace("TPE", ""));
-        // System.out.println("Artist: " + id3.substring(33, 62));
-        // System.out.println("Album: " + id3.substring(63, 91));
-        // System.out.println("Year: " + id3.substring(93, 97));
-        // } else
-        // System.out.println(" does not contain" + " ID3 information.");
-        // file.close();
+        // songTitle.setText(Utilities.read_metadata(songs.get(songNumber)));
 
-        // } catch (Exception e) {
-
-        // System.out.println("Error - " + e.toString());
-
-        // }
         loadMedia(false);
 
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -127,7 +131,48 @@ public class HomeControllers implements Initializable {
             }
         });
         actionIcon.setImage(playBtnIcon);
+        try {
+            loadPlaylistList();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void loadPlaylistList() throws ClassNotFoundException {
+        System.out.println("Getting playlist");
+        try {
+            Socket socket = new Socket("127.0.0.1", 5000);
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+
+            MAMP req = new MAMP("/getPlaylists", "", null);
+            outputStream.writeObject(req);
+
+            ArrayList<Playlist> playlists = (ArrayList<Playlist>) inputStream.readObject();
+            playlistList.getChildren();
+            for (Playlist p : playlists) {
+                Button btn = new Button(p.name);
+                btn.setStyle("-fx-text-fill: #fff; -fx-background-color: #00000000");
+                btn.setFont(new Font(18));
+                playlistList.getChildren().add(btn);
+            }
+            outputStream.close();
+
+            socket.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void addPlaylist(ActionEvent event) throws IOException {
+        Stage createPlaylist = new Stage();
+        createPlaylist.setTitle("Create new playlist");
+        Parent root = FXMLLoader.load(getClass().getResource("/client/views/PlaylistPopUP.fxml"));
+        Scene scene = new Scene(root, 450, 220);
+        createPlaylist.setScene(scene);
+        createPlaylist.show();
     }
 
     private void createMusicList(File[] files) {
@@ -140,14 +185,17 @@ public class HomeControllers implements Initializable {
                 final int index = indexCounter++;
 
                 Image playBtnIcon = new Image(getClass().getResourceAsStream("/assets/icons8_play_30px.png"));
+                Image addBtnIcon = new Image(getClass().getResourceAsStream("/assets/icons8_plus_math_30px.png"));
                 // Image pauseBtnIcon = new
                 // Image(getClass().getResourceAsStream("/assets/icons8_pause_30px.png"));
 
                 HBox songItem = new HBox();
+                songItem.setPadding(new Insets(10.0));
                 songItem.setAlignment(Pos.CENTER_LEFT);
                 songItem.setPrefWidth(715.0);
                 songItem.setPrefHeight(30.0);
-                songItem.setStyle("-fx-background-color: #00000000;");
+                if (indexCounter % 2 == 0)
+                    songItem.setStyle("-fx-background-color: #00000050;");
 
                 Label songTitle = new Label(file.getName());
                 songTitle.setStyle("-fx-text-fill: #ffffff;");
@@ -155,6 +203,9 @@ public class HomeControllers implements Initializable {
 
                 Button playBtn = new Button();
                 playBtn.setStyle("-fx-background-color: #00000000;");
+
+                Button addBtn = new Button();
+                addBtn.setStyle("-fx-background-color: #00000000;");
 
                 playBtn.setOnAction(new EventHandler<ActionEvent>() {
                     public void handle(ActionEvent e) {
@@ -169,21 +220,37 @@ public class HomeControllers implements Initializable {
                         loadMedia(true);
                     }
                 });
+
+                addBtn.setOnAction(new EventHandler<ActionEvent>() {
+                    public void handle(ActionEvent e) {
+                        System.out.println("add to playlist...");
+                    }
+                });
                 ImageView icon = new ImageView(playBtnIcon);
                 playBtn.setGraphic(icon);
-                songItem.getChildren().addAll(songTitle, playBtn);
+
+                ImageView iconAdd = new ImageView(addBtnIcon);
+                addBtn.setGraphic(iconAdd);
+
+                songItem.getChildren().addAll(songTitle, playBtn, iconAdd);
                 mediaList.getChildren().add(songItem);
             }
         }
     }
 
     @FXML
+    void refresh(ActionEvent event) throws ClassNotFoundException {
+        System.out.println("Refresh home");
+        loadPlaylistList();
+    }
+
+    @FXML
     void next(ActionEvent event) {
-        System.out.println(songNumber + " / " + songs.size());
-        if (songNumber - 1 < songs.size()) {
+        if (songNumber < songs.size() - 1) {
             songNumber++;
             mediaPlayer.stop();
-            cancelTimer();
+            if (timer != null)
+                cancelTimer();
             loadMedia(true);
         }
     }
@@ -203,12 +270,12 @@ public class HomeControllers implements Initializable {
 
     @FXML
     void previous(ActionEvent event) {
-        System.out.println(songNumber + " / " + songs.size());
 
         if (songNumber > 0) {
             songNumber--;
             mediaPlayer.stop();
-            cancelTimer();
+            if (timer != null)
+                cancelTimer();
             loadMedia(true);
         }
     }
@@ -220,9 +287,7 @@ public class HomeControllers implements Initializable {
                 isPlaying = true;
                 double current = mediaPlayer.getCurrentTime().toSeconds();
                 double end = media.getDuration().toSeconds();
-                // System.out.println(current / end);
                 songProgressBar.setProgress(current / end);
-
                 if (current / end == 1) {
                     cancelTimer();
                 }
